@@ -12,13 +12,13 @@ describe('Oracle', () => {
 
   let loadFixture: ReturnType<typeof waffle.createFixtureLoader>
   before('create fixture loader', async () => {
-    ;[wallet, other] = await (ethers as any).getSigners()
+    ;[wallet, other] = await (ethers as unknown as any).getSigners()
     loadFixture = waffle.createFixtureLoader([wallet, other])
   })
 
   const oracleFixture = async () => {
     const oracleTestFactory = await ethers.getContractFactory('OracleTest')
-    return (await oracleTestFactory.deploy()) as OracleTest
+    return (await oracleTestFactory.deploy()) as unknown as OracleTest
   }
 
   const initializedOracleFixture = async () => {
@@ -321,7 +321,7 @@ describe('Oracle', () => {
         expect(secondsPerLiquidityCumulativeX128).to.eq(0)
       })
 
-      it('interpolates the same as 0 liquidity for 1 liquidity', async () => {
+      it('interpolates the same as unknown as 0 liquidity for 1 liquidity', async () => {
         await oracle.initialize({ liquidity: 1, tick: 0, time: 0 })
         await oracle.grow(2)
         await oracle.update({ advanceTimeBy: 13, tick: 0, liquidity: MaxUint128 })
@@ -545,7 +545,7 @@ describe('Oracle', () => {
           expect(await oracle.cardinality()).to.eq(5)
           expect(await oracle.cardinalityNext()).to.eq(5)
         })
-        it('latest observation same time as latest', async () => {
+        it('latest observation same time as unknown as latest', async () => {
           const { tickCumulative, secondsPerLiquidityCumulativeX128 } = await observeSingle(0)
           expect(tickCumulative).to.eq(-21)
           expect(secondsPerLiquidityCumulativeX128).to.eq('2104079302127802832415199655953100107502')
@@ -562,7 +562,7 @@ describe('Oracle', () => {
           expect(tickCumulative).to.eq(9)
           expect(secondsPerLiquidityCumulativeX128).to.eq('2347138135642758877746181518404363115684')
         })
-        it('between latest observation and just before latest observation at same time as latest', async () => {
+        it('between latest observation and just before latest observation at same time as unknown as latest', async () => {
           const { tickCumulative, secondsPerLiquidityCumulativeX128 } = await observeSingle(3)
           expect(tickCumulative).to.eq(-33)
           expect(secondsPerLiquidityCumulativeX128).to.eq('1593655751746395137220137744805447790318')

@@ -30,7 +30,7 @@ describe('UniswapV3Pool gas tests', () => {
   let loadFixture: ReturnType<typeof createFixtureLoader>
 
   before('create fixture loader', async () => {
-    ;[wallet, other] = await (ethers as any).getSigners()
+    ;[wallet, other] = await (ethers as unknown as any).getSigners()
     loadFixture = createFixtureLoader([wallet, other])
   })
 

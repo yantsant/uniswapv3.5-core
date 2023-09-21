@@ -1,4 +1,4 @@
-import { Wallet } from 'ethers'
+import { Signer, Wallet } from 'ethers'
 import { ethers, waffle } from 'hardhat'
 import { UniswapV3Factory } from '../typechain/UniswapV3Factory'
 import { expect } from './shared/expect'
@@ -22,12 +22,12 @@ describe('UniswapV3Factory', () => {
   let poolBytecode: string
   const fixture = async () => {
     const factoryFactory = await ethers.getContractFactory('UniswapV3Factory')
-    return (await factoryFactory.deploy()) as UniswapV3Factory
+    return (await factoryFactory.deploy()) as unknown as UniswapV3Factory
   }
 
   let loadFixture: ReturnType<typeof createFixtureLoader>
   before('create fixture loader', async () => {
-    ;[wallet, other] = await (ethers as any).getSigners()
+    ;[wallet, other] = await (ethers as unknown as any).getSigners()
 
     loadFixture = createFixtureLoader([wallet, other])
   })
@@ -125,7 +125,7 @@ describe('UniswapV3Factory', () => {
 
   describe('#setOwner', () => {
     it('fails if caller is not owner', async () => {
-      await expect(factory.connect(other).setOwner(wallet.address)).to.be.reverted
+      await expect(factory.connect(other as unknown as Signer).setOwner(wallet.address)).to.be.reverted
     })
 
     it('updates owner', async () => {
@@ -147,7 +147,7 @@ describe('UniswapV3Factory', () => {
 
   describe('#enableFeeAmount', () => {
     it('fails if caller is not owner', async () => {
-      await expect(factory.connect(other).enableFeeAmount(100, 2)).to.be.reverted
+      await expect(factory.connect(other as unknown as Signer).enableFeeAmount(100, 2)).to.be.reverted
     })
     it('fails if fee is too great', async () => {
       await expect(factory.enableFeeAmount(1000000, 10)).to.be.reverted

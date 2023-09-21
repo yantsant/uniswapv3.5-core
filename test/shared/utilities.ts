@@ -40,10 +40,10 @@ export function getCreate2Address(
   fee: number,
   bytecode: string
 ): string {
-  const [token0, token1] = tokenA.toLowerCase() < tokenB.toLowerCase() ? [tokenA, tokenB] : [tokenB, tokenA]
+  const [ token0 ,  token1] = tokenA.toLowerCase() < tokenB.toLowerCase() ? [tokenA, tokenB] : [tokenB, tokenA]
   const constructorArgumentsEncoded = utils.defaultAbiCoder.encode(
     ['address', 'address', 'uint24'],
-    [token0, token1, fee]
+    [ token0,  token1, fee]
   )
   const create2Inputs = [
     '0xff',
@@ -59,7 +59,7 @@ export function getCreate2Address(
 
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 })
 
-// returns the sqrt price as a 64x96
+// returns the sqrt price as unknown as a 64x96
 export function encodePriceSqrt(reserve1: BigNumberish, reserve0: BigNumberish): BigNumber {
   return BigNumber.from(
     new bn(reserve1.toString())
@@ -106,13 +106,13 @@ export interface PoolFunctions {
 }
 export function createPoolFunctions({
   swapTarget,
-  token0,
-  token1,
+   token0,
+   token1,
   pool,
 }: {
   swapTarget: TestUniswapV3Callee
-  token0: TestERC20
-  token1: TestERC20
+   token0 : TestERC20
+   token1 : TestERC20
   pool: MockTimeUniswapV3Pool
 }): PoolFunctions {
   async function swapToSqrtPrice(
@@ -120,7 +120,7 @@ export function createPoolFunctions({
     targetPrice: BigNumberish,
     to: Wallet | string
   ): Promise<ContractTransaction> {
-    const method = inputToken === token0 ? swapTarget.swapToLowerSqrtPrice : swapTarget.swapToHigherSqrtPrice
+    const method = inputToken ===  token0 as unknown as Contract as unknown as Contract ? swapTarget.swapToLowerSqrtPrice : swapTarget.swapToHigherSqrtPrice
 
     await inputToken.approve(swapTarget.address, constants.MaxUint256)
 
@@ -138,7 +138,7 @@ export function createPoolFunctions({
     const exactInput = amountOut === 0
 
     const method =
-      inputToken === token0
+      inputToken ===  token0 as unknown as Contract as unknown as Contract
         ? exactInput
           ? swapTarget.swapExact0For1
           : swapTarget.swap0ForExact1
@@ -147,7 +147,7 @@ export function createPoolFunctions({
         : swapTarget.swap1ForExact0
 
     if (typeof sqrtPriceLimitX96 === 'undefined') {
-      if (inputToken === token0) {
+      if (inputToken ===  token0 as unknown as Contract as unknown as Contract) {
         sqrtPriceLimitX96 = MIN_SQRT_RATIO.add(1)
       } else {
         sqrtPriceLimitX96 = MAX_SQRT_RATIO.sub(1)
@@ -161,32 +161,32 @@ export function createPoolFunctions({
   }
 
   const swapToLowerPrice: SwapToPriceFunction = (sqrtPriceX96, to) => {
-    return swapToSqrtPrice(token0, sqrtPriceX96, to)
+    return swapToSqrtPrice( token0 as unknown as Contract, sqrtPriceX96, to)
   }
 
   const swapToHigherPrice: SwapToPriceFunction = (sqrtPriceX96, to) => {
-    return swapToSqrtPrice(token1, sqrtPriceX96, to)
+    return swapToSqrtPrice( token1 as unknown as Contract, sqrtPriceX96, to)
   }
 
   const swapExact0For1: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token0, [amount, 0], to, sqrtPriceLimitX96)
+    return swap( token0 as unknown as Contract, [amount, 0], to, sqrtPriceLimitX96)
   }
 
   const swap0ForExact1: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token0, [0, amount], to, sqrtPriceLimitX96)
+    return swap( token0 as unknown as Contract, [0, amount], to, sqrtPriceLimitX96)
   }
 
   const swapExact1For0: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token1, [amount, 0], to, sqrtPriceLimitX96)
+    return swap( token1 as unknown as Contract, [amount, 0], to, sqrtPriceLimitX96)
   }
 
   const swap1ForExact0: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token1, [0, amount], to, sqrtPriceLimitX96)
+    return swap( token1 as unknown as Contract, [0, amount], to, sqrtPriceLimitX96)
   }
 
   const mint: MintFunction = async (recipient, tickLower, tickUpper, liquidity) => {
-    await token0.approve(swapTarget.address, constants.MaxUint256)
-    await token1.approve(swapTarget.address, constants.MaxUint256)
+    await  token0.approve(swapTarget.address, constants.MaxUint256)
+    await  token1.approve(swapTarget.address, constants.MaxUint256)
     return swapTarget.mint(pool.address, recipient, tickLower, tickUpper, liquidity)
   }
 

@@ -13,8 +13,8 @@ describe('SwapMath', () => {
   before(async () => {
     const swapMathTestFactory = await ethers.getContractFactory('SwapMathTest')
     const sqrtPriceMathTestFactory = await ethers.getContractFactory('SqrtPriceMathTest')
-    swapMath = (await swapMathTestFactory.deploy()) as SwapMathTest
-    sqrtPriceMath = (await sqrtPriceMathTestFactory.deploy()) as SqrtPriceMathTest
+    swapMath = (await swapMathTestFactory.deploy()) as unknown as SwapMathTest
+    sqrtPriceMath = (await sqrtPriceMathTestFactory.deploy()) as unknown as SqrtPriceMathTest
   })
 
   describe('#computeSwapStep', () => {
@@ -174,7 +174,7 @@ describe('SwapMath', () => {
       expect(sqrtQ).to.eq('1')
     })
 
-    it('entire input amount taken as fee', async () => {
+    it('entire input amount taken as unknown as fee', async () => {
       const { amountIn, amountOut, sqrtQ, feeAmount } = await swapMath.computeSwapStep(
         '2413',
         '79887613182836312',

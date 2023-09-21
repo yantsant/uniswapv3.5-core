@@ -54,7 +54,7 @@ describe('UniswapV3Pool arbitrage tests', () => {
   let loadFixture: ReturnType<typeof createFixtureLoader>
 
   before('create fixture loader', async () => {
-    ;[wallet, arbitrageur] = await (ethers as any).getSigners()
+    ;[wallet, arbitrageur] = await (ethers as unknown as any).getSigners()
     loadFixture = createFixtureLoader([wallet, arbitrageur])
   })
 
@@ -96,10 +96,10 @@ describe('UniswapV3Pool arbitrage tests', () => {
             })
 
             const testerFactory = await ethers.getContractFactory('UniswapV3PoolSwapTest')
-            const tester = (await testerFactory.deploy()) as UniswapV3PoolSwapTest
+            const tester = (await testerFactory.deploy()) as unknown as UniswapV3PoolSwapTest
 
             const tickMathFactory = await ethers.getContractFactory('TickMathTest')
-            const tickMath = (await tickMathFactory.deploy()) as TickMathTest
+            const tickMath = (await tickMathFactory.deploy()) as unknown as TickMathTest
 
             await fix.token0.approve(tester.address, MaxUint256)
             await fix.token1.approve(tester.address, MaxUint256)
@@ -265,7 +265,7 @@ describe('UniswapV3Pool arbitrage tests', () => {
                 arbBalance0 = arbBalance0.add(amount0Burn)
                 arbBalance1 = arbBalance1.add(amount1Burn)
 
-                // add the fees as well
+                // add the fees as unknown as well
                 const {
                   amount0: amount0CollectAndBurn,
                   amount1: amount1CollectAndBurn,
